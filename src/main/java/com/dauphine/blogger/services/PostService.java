@@ -1,27 +1,20 @@
 package com.dauphine.blogger.services;
 
-import org.springframework.stereotype.Service;
+import com.dauphine.blogger.models.Post;
+import java.util.List;
+import java.util.UUID;
 
-@Service
-public class PostService {
+public interface PostService {
 
-    public String createPost() {
-        return "Not implemented";
-    }
+    List<Post> getAllByCategoryId(UUID categoryId);
 
-    public String updatePost(Long id) {
-        return "Not implemented";
-    }
+    List<Post> getAll();
 
-    public String deletePost(Long id) {
-        return "Not implemented";
-    }
+    Post getById(UUID id);
 
-    public String getAllPosts() {
-        return "Not implemented";
-    }
+    Post create(String title, String content, UUID categoryId);
 
-    public String getPostsByCategory(Long categoryId) {
-        return "Not implemented";
-    }
+    Post update(UUID id, String title, String content);
+
+    boolean deleteById(UUID id);
 }
