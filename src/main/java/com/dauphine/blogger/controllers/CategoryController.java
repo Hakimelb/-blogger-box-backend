@@ -1,8 +1,14 @@
 package com.dauphine.blogger.controllers;
+
+import com.dauphine.blogger.models.Category;
+import com.dauphine.blogger.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @Tag(
         name = "Categories API",
@@ -12,43 +18,53 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/categories")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
     @GetMapping
     @Operation(summary = "Retrieve all categories")
-    public String getAllCategories() {
-        return "Not implemented";
+    public List<Category> getAllCategories() {
+        return categoryService.getAll();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve a category by id")
-    public String getCategoryById(
+    public Category getCategoryById(
             @Parameter(description = "Category id")
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
-        return "Not implemented";
+        return categoryService.getById(id);
     }
 
     @PostMapping
     @Operation(summary = "Create a new category")
-    public String createCategory() {
-        return "Not implemented";
+    public Category createCategory(
+            @Parameter(description = "Category name")
+            @RequestParam String name
+    ) {
+        return categoryService.create(name);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update the name of a category")
-    public String updateCategoryName(
+    public Category updateCategoryName(
             @Parameter(description = "Category id")
-            @PathVariable Long id
+            @PathVariable UUID id,
+            @Parameter(description = "New category name")
+            @RequestParam String name
     ) {
-        return "Not implemented";
+        return categoryService.updateName(id, name);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an existing category")
-    public String deleteCategory(
+    public void deleteCategory(
             @Parameter(description = "Category id")
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
-        return "Not implemented";
+        categoryService.deleteById(id);
     }
 }
-

@@ -1,3 +1,6 @@
+package com.dauphine.blogger.controllers;
+
+import com.dauphine.blogger.services.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,10 +14,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/posts")
 public class PostController {
 
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
     @PostMapping
     @Operation(summary = "Create a new post")
     public String createPost() {
-        return "Not implemented";
+        return postService.createPost();
     }
 
     @PutMapping("/{id}")
@@ -23,7 +32,7 @@ public class PostController {
             @Parameter(description = "Post id")
             @PathVariable Long id
     ) {
-        return "Not implemented";
+        return postService.updatePost(id);
     }
 
     @DeleteMapping("/{id}")
@@ -32,13 +41,13 @@ public class PostController {
             @Parameter(description = "Post id")
             @PathVariable Long id
     ) {
-        return "Not implemented";
+        return postService.deletePost(id);
     }
 
     @GetMapping
     @Operation(summary = "Retrieve all posts ordered by creation date")
     public String getAllPosts() {
-        return "Not implemented";
+        return postService.getAllPosts();
     }
 
     @GetMapping("/by-category/{categoryId}")
@@ -47,6 +56,6 @@ public class PostController {
             @Parameter(description = "Category id")
             @PathVariable Long categoryId
     ) {
-        return "Not implemented";
+        return postService.getPostsByCategory(categoryId);
     }
 }
