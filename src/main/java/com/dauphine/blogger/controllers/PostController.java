@@ -2,18 +2,13 @@ package com.dauphine.blogger.controllers;
 
 import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.services.PostService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@Tag(
-        name = "Posts API",
-        description = "Endpoints for posts"
-)
 @RestController
 @RequestMapping("/v1/posts")
 public class PostController {
@@ -24,52 +19,31 @@ public class PostController {
         this.service = service;
     }
 
-    @GetMapping("/by-category/{categoryId}")
-    @Operation(summary = "Retrieve all posts per a category")
-    public List<Post> getAllByCategory(
-            @Parameter(description = "Category id")
-            @PathVariable UUID categoryId
-    ) {
-        return service.getAllByCategoryId(categoryId);
-    }
-
     @GetMapping
-    @Operation(summary = "Retrieve all posts ordered by creation date")
-    public List<Post> getAllPosts() {
-        return service.getAll();
+    public ResponseEntity<List<Post>> getAll(@RequestParam(required = false) String value) {
+        if (value != null) {
+            return ResponseEntity.ok(service.getAllByValue(value));
+        }
+        return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Retrieve a post by id")
-    public Post getPostById(
-            @Parameter(description = "Post id")
-            @PathVariable UUID id
-    ) {
-        return service.getById(id);
+    public ResponseEntity<Post> getById(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping
-    @Operation(summary = "Create a new post")
-    public Post createPost(@RequestBody Post post) {
-        return service.create(post.getTitle(), post.getContent(), post.getCategoryId());
+    public ResponseEntity<Post> create(@RequestParam String title, @RequestParam String content, @RequestParam UUID categoryId) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(title, content, categoryId));
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update an existing post")
-    public Post updatePost(
-            @Parameter(description = "Post id")
-            @PathVariable UUID id,
-            @RequestBody Post post
-    ) {
-        return service.update(id, post.getTitle(), post.getContent());
+    public ResponseEntity<Post> updateContent(@PathVariable UUID id, @RequestParam String content) {
+        return ResponseEntity.ok(service.updateContent(id, content));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete an existing post")
-    public boolean deletePost(
-            @Parameter(description = "Post id")
-            @PathVariable UUID id
-    ) {
-        return service.deleteById(id);
+    public ResponseEntity<Boolean> deleteById(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.deleteById(id));
     }
 }

@@ -23,23 +23,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getById(UUID id) {
-        return repository.findById(id).orElse(null);
+    public List<Category> getAllByName(String name) {
+        return repository.findAllLikeName(name);
     }
 
     @Override
+    public Category getById(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new com.dauphine.blogger.exceptions.CategoryNotFoundException(id));
+    }
+
+
+    @Override
     public Category create(String name) {
-        Category category = new Category(UUID.randomUUID(), name);
+        Category category = new Category(name);
         return repository.save(category);
     }
 
     @Override
-    @Override
     public Category updateName(UUID id, String name) {
         Category category = getById(id);
-        if (category == null) {
-            return null;
-        }
         category.setName(name);
         return repository.save(category);
     }
