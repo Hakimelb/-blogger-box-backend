@@ -14,5 +14,5 @@ public interface CategoryService {
 
     Category updateName(UUID id, String name);
 
-    void deleteById(UUID id);
+    boolean deleteById(UUID id);
 }
